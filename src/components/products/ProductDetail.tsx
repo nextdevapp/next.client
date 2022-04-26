@@ -8,13 +8,21 @@ import { ObjectToQueryString } from "../../utils/CommonUtils";
 import { RootState, store } from "../../store/store";
 import { useSelector } from "react-redux";
 import Breadcrumb from "./Breadcrumb";
+import ProductGallery from "./ProductGallery";
 
-const fetchData = async ({ queryKey }: any) => {
+const fetchData = async ({ queryKey }: any | undefined) => {
   const [_, slug] = queryKey;
   if (slug) {
-    const res = await fetch(`${API_ENDPOINTS.ProductDetail}/${slug}`);
-    return res.json();
+    return fetch(`${API_ENDPOINTS.ProductDetail}/${slug}`).then((res) => {
+      const result = res.json();
+      return result;
+    });
   }
+
+  // if (slug) {
+  //   const res = await fetch(`${API_ENDPOINTS.ProductDetail}/${slug}`);
+  //   return res.json();
+  // } else return undefined;
 };
 
 const ProductDetail = () => {
@@ -24,7 +32,7 @@ const ProductDetail = () => {
 
   const { data, status, isLoading } = useQuery<ProductDetail>(
     ["Product", slug],
-    fetchData
+    fetchData,
   );
 
   return (
@@ -37,8 +45,8 @@ const ProductDetail = () => {
             <Breadcrumb />
           </div>
           <div className="block lg:grid grid-cols-9 gap-x-10 xl:gap-x-14 pt-7 pb-10 lg:pb-14 2xl:pb-20 items-start">
-            <div className="col-span-5 grid grid-cols-2 gap-2.5">
-              {/* 01 */}
+            <div className="col-span-5 grid">
+              <ProductGallery />
             </div>
             <div className="col-span-4 pt-8 lg:pt-0">
               <div className="pb-7 mb-7 border-b border-gray-300">
@@ -50,11 +58,13 @@ const ProductDetail = () => {
                 </p>
                 <div className="flex items-center mt-5">
                   <div className="text-heading font-bold text-base md:text-xl lg:text-2xl 2xl:text-4xl pe-2 md:pe-0 lg:pe-2 2xl:pe-0">
-                    ${data.salePrice}
+                    <span>$</span>
+                    {data.salePrice}
                   </div>
 
                   <div className="line-through text-gray-400 text-heading font-bold text-base md:text-xl lg:text-2xl 2xl:text-4xl pe-2 md:pe-0 lg:pe-2 2xl:pe-0 ml-4">
-                    ${data.price}
+                    <span>$</span>
+                    {data.price}
                   </div>
                 </div>
               </div>

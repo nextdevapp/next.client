@@ -2,6 +2,7 @@ import React from "react";
 import StorefrontLayout from "../components/layouts/StorefrontLayout";
 import ProductFilter from "../components/filters/ProductFilter";
 import ProductList from "../components/products/ProductList";
+
 const Shop = () => {
   return (
     <div>
